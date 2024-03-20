@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixvim, ... }@inputs:
 
 {
+  #imports = [ nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "eve";
@@ -17,15 +18,15 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-  	nixfmt
+  home.packages = with pkgs;
+    [
+      nixfmt
 
-  ];
+    ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
-  home.file = {
-  };
+  home.file = { };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. If you don't want to manage your shell through Home
@@ -49,19 +50,15 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-programs.git.enable = true;
+  programs.git.enable = true;
 
-programs.emacs =
-{
-enable = true;
-};
+  programs.emacs = { enable = true; };
 
-programs.neovim = 
-{
-enable = true;
-defaultEditor = true;
-viAlias = true;
-vimAlias = true;
-vimdiffAlias = true;
-};
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+  };
 }

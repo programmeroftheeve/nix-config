@@ -10,10 +10,16 @@
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim/release-23.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils.url = "github:numtide/flake-utils";
+    stylix.url = "github:danth/stylix";
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, flake-utils, home-manager, ... }:
+  outputs = { nixpkgs, nixpkgs-unstable, flake-utils, home-manager, nixvim, ...
+    }@inputs:
     let system = "x86_64-linux";
     in {
 
@@ -22,12 +28,15 @@
 
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
-        modules = [ ./home.nix ];
+        modules = [ 
+stylix.homeManagerModules.stylix
+	nixvim.homeManagerModules.nixvim ./home.nix ];
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
         extraSpecialArgs = {
           unstable-pkgs = nixpkgs-unstable.legacyPackages.${system};
+          nixvim = nixvim;
         };
       };
     };
