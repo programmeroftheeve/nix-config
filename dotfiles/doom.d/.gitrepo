@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@git.sr.ht:~btaidm/doom.d
+	branch = master
+	commit = 15e30ede2d3f1f4478e3353795872f0e62a0fc11
+	parent = d6965cc26eb1259bb68ea39988cb0e528b5d4cda
+	method = merge
+	cmdver = 0.4.1

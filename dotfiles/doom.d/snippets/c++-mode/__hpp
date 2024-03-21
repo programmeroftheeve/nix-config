@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# group: file templates
+# contributor: Eve Bradt
+# --
+#pragma once /* ${1:`(upcase (file-name-nondirectory (file-name-sans-extension (buffer-file-name))))`_H} */
+
+$0
