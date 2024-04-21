@@ -1,6 +1,8 @@
-{ config, pkgs, nixvim, ... }@inputs:
-
 {
+  config,
+  pkgs,
+  ...
+} @ inputs: {
   #imports = [ nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -18,7 +20,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [ nixfmt htop ripgrep fd grit glab hut ];
+  home.packages = with pkgs; [nixfmt htop ripgrep fd grit glab hut];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -29,7 +31,6 @@
       recursive = true;
     };
     ".config/fish/fish_plugins".source = dotfiles/fish/fish_plugins;
-
   };
 
   # Home Manager can also manage your environment variables through
@@ -51,21 +52,22 @@
     # EDITOR = "emacs";
   };
 
-  home.sessionPath =
-    [ "$HOME/.local/bin" "$HOME/.emacs.d/bin" "$HOME/.config/emacs/bin" ];
+  home.sessionPath = ["$HOME/.local/bin" "$HOME/.emacs.d/bin" "$HOME/.config/emacs/bin"];
 
   programs.fish = {
     enable = true;
     interactiveShellInit = "set -g fish_key_bindings fish_vi_key_bindings";
-    plugins = [{
-      name = "fisher";
-      src = pkgs.fetchFromGitHub {
-        owner = "jorgebucaran";
-        repo = "fisher";
-        rev = "4.4.4";
-        hash = "sha256-e8gIaVbuUzTwKtuMPNXBT5STeddYqQegduWBtURLT3M=";
-      };
-    }];
+    plugins = [
+      {
+        name = "fisher";
+        src = pkgs.fetchFromGitHub {
+          owner = "jorgebucaran";
+          repo = "fisher";
+          rev = "4.4.4";
+          hash = "sha256-e8gIaVbuUzTwKtuMPNXBT5STeddYqQegduWBtURLT3M=";
+        };
+      }
+    ];
     shellAliases = {
       lstask = "grit ls";
       tasks = "grit tree";
@@ -127,12 +129,9 @@
 
         '';
       };
-      task_aliases =
-        "sqlite3 ~/.config/grit/graph.db 'SELECT node_alias FROM nodes WHERE node_alias IS NOT NULL;' '.exit'";
-      get_tasks =
-        "sqlite3 ~/.config/grit/graph.db 'SELECT node_id FROM nodes;' '.exit'";
-      get_root_tasks =
-        "sqlite3 ~/.config/grit/graph.db 'SELECT node_id FROM nodes WHERE node_id NOT IN (SELECT dest_id FROM links);' '.exit'";
+      task_aliases = "sqlite3 ~/.config/grit/graph.db 'SELECT node_alias FROM nodes WHERE node_alias IS NOT NULL;' '.exit'";
+      get_tasks = "sqlite3 ~/.config/grit/graph.db 'SELECT node_id FROM nodes;' '.exit'";
+      get_root_tasks = "sqlite3 ~/.config/grit/graph.db 'SELECT node_id FROM nodes WHERE node_id NOT IN (SELECT dest_id FROM links);' '.exit'";
       schtask = {
         body = ''
                 set -l options (fish_opt -s d -l date -o)
@@ -203,13 +202,20 @@
 
   programs.git.enable = true;
 
-  programs.emacs = { enable = true; };
+  programs.emacs = {enable = true;};
 
-  programs.neovim = {
+  services.emacs = {
     enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
+    client.enable = true;
   };
+
+  programs.nixvim.enable = true;
+
+  #  programs.neovim = {
+  #enable = true;
+  #defaultEditor = true;
+  #viAlias = true;
+  #vimAlias = true;
+  #vimdiffAlias = true;
+  #};
 }
