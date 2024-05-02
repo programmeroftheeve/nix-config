@@ -1,13 +1,15 @@
 {
   config,
   pkgs,
+  username,
+  homeDir,
   ...
 } @ inputs: {
   #imports = [ nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "eve";
-  home.homeDirectory = "/home/eve";
+  home.username = username;
+  home.homeDirectory = homeDir;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -200,6 +202,7 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  personal.programs.git.enable = true;
   programs.git.enable = true;
 
   programs.emacs = {enable = true;};

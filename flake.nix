@@ -14,7 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:danth/stylix/release-23.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = {
@@ -27,10 +31,19 @@
   } @ args: let
     inherit (self) outputs;
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
     top_level = ./.;
     lib = import ./lib;
-    user_profiles = [{username = "eve";}];
+    user_profiles = [
+      {username = "eve";}
+      {
+        username = "ebradt";
+        config = ./home/eve.nix;
+      }
+    ];
     system_profiles = [
       {
         hostname = "faraday";
@@ -40,8 +53,15 @@
         hostname = "server-vm";
         inherit system;
       }
+      {
+        hostname = "faye";
+        inherit system;
+      }
     ];
-
+    system_modules = with args; [];
+    home_modules = with args; [
+      nixvim.homeManagerModules.nixvim
+    ];
     my_modules = import ./modules;
   in {
     inherit lib;
@@ -50,7 +70,7 @@
       lib.genHomeConfigurations (
         let
           inherit (args) nixvim stylix;
-          modules = my_modules.home.modules ++ [nixvim.homeManagerModules.nixvim stylix.homeManagerModules.stylix];
+          modules = my_modules.home.modules ++ home_modules;
         in
           {
             inherit pkgs;
