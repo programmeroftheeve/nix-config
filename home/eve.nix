@@ -1,10 +1,14 @@
 {
   config,
   pkgs,
-  username,
-  homeDir,
+  profile,
   ...
-} @ inputs: {
+} @ inputs:
+let
+  username = profile.username;
+  homeDir = profile.homeDir;
+in
+{
   #imports = [ nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
