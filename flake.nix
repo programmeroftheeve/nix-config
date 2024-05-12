@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    nixvim-personal = {
+      url = "sourcehut:~btaidm/nixvim-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixvim.follows = "nixvim";
+    };
   };
 
   outputs = {
@@ -27,6 +32,7 @@
     nixpkgs-unstable,
     flake-utils,
     home-manager,
+    nixvim-personal,
     ...
   } @ args: let
     inherit (self) outputs;
@@ -35,6 +41,9 @@
       inherit system;
       config.allowUnfree = true;
     };
+    nixvim-pkgs = with nixvim-personal; {
+      packages = packages.${system};
+      };
     top_level = ./.;
     lib = import ./lib;
     user_profiles = [
@@ -75,6 +84,7 @@
           {
             inherit pkgs;
             inherit modules;
+            extraSpecialArgs = {inherit nixvim-pkgs;};
           }
           // args
       )
