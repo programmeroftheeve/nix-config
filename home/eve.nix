@@ -216,7 +216,6 @@ in
     client.enable = true;
   };
 
-  programs.nixvim.enable = true;
 
   #  programs.neovim = {
   #enable = true;
