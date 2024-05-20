@@ -26,7 +26,7 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [nixfmt htop ripgrep fd grit glab hut];
+  home.packages = (with pkgs; [nixfmt htop ripgrep fd grit glab hut ]) ++ [ inputs.nixvim-pkgs.packages.nvim ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

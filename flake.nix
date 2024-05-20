@@ -26,6 +26,7 @@
     nixpkgs-stable,
     flake-utils,
     home-manager,
+    nixvim-personal,
     ...
   } @ args: let
     inherit (self) outputs;
@@ -33,6 +34,9 @@
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
+    };
+    nixvim-pkgs = with nixvim-personal; {
+	packages = packages.${system};
     };
     top_level = ./.;
     lib = import ./lib;
@@ -73,6 +77,7 @@
           {
             inherit pkgs;
             inherit modules;
+	    extraSpecialArgs = { inherit nixvim-pkgs; };
           }
           // args
       )
