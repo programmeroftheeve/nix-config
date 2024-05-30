@@ -5,6 +5,11 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,6 +22,7 @@
     };
     nixvim-personal = {
       url = "sourcehut:~btaidm/nixvim-config";
+      inputs.nixvim.follows = "nixvim";
     };
   };
 
@@ -36,8 +42,9 @@
       config.allowUnfree = true;
     };
     nixvim-pkgs = with nixvim-personal; {
-	packages = packages.${system};
+      packages = packages.${system};
     };
+
     top_level = ./.;
     lib = import ./lib;
     user_profiles = [
@@ -61,8 +68,12 @@
         inherit system;
       }
     ];
-    system_modules = with args; [];
+    system_modules = with args; [
+      args.stylix.nixosModules.stylix
+    ];
     home_modules = with args; [
+      args.stylix.homeManagerModules.stylix
+      # args.nixvim.homeManagerModules.nixvim
     ];
     my_modules = import ./modules;
   in {
@@ -72,19 +83,19 @@
       lib.genHomeConfigurations (
         let
           # inherit (args) nixvim stylix;
-          modules = my_modules.home.modules ++ home_modules;
+          modules = my_modules.home ++ home_modules;
         in
           {
             inherit pkgs;
             inherit modules;
-	    extraSpecialArgs = { inherit nixvim-pkgs; };
+            extraSpecialArgs = {inherit nixvim-pkgs;};
           }
           // args
       )
       user_profiles;
     nixosConfigurations = lib.genSystemConfigurations ({
         inherit pkgs;
-        inherit (my_modules.system) modules;
+        modules = my_modules.system ++ system_modules;
       }
       // args)
     system_profiles;

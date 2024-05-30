@@ -3,12 +3,15 @@
   pkgs,
   profile,
   ...
-} @ inputs:
-let
+} @ inputs: let
   username = profile.username;
   homeDir = profile.homeDir;
-in
-{
+  fonts = with pkgs; [
+    (pkgs.nerdfonts.override {
+      fonts = ["Hack"];
+    })
+  ];
+in {
   #imports = [ nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -26,7 +29,13 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = (with pkgs; [nixfmt htop ripgrep fd grit glab hut ]) ++ [ inputs.nixvim-pkgs.packages.nvim ];
+  home.packages = (with pkgs; [nixfmt htop ripgrep fd grit glab hut mpv inkscape]) ++ fonts;
+
+  fonts.fontconfig.enable = true;
+
+  fonts.fontconfig.defaultFonts = {
+    monospace = ["Hack Nerd Font"];
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -39,24 +48,6 @@ in
     ".config/fish/fish_plugins".source = dotfiles/fish/fish_plugins;
   };
 
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. If you don't want to manage your shell through Home
-  # Manager then you have to manually source 'hm-session-vars.sh' located at
-  # either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/eve/etc/profile.d/hm-session-vars.sh
-  #
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
 
   home.sessionPath = ["$HOME/.local/bin" "$HOME/.emacs.d/bin" "$HOME/.config/emacs/bin"];
 
@@ -203,6 +194,11 @@ in
     nix-direnv.enable = true;
   };
 
+  programs.yt-dlp.enable = true;
+  programs.mpv = {
+    enable = true;
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -216,6 +212,10 @@ in
     client.enable = true;
   };
 
+  personal.programs.nixvim = {
+  enable = true;
+  vimAlias = true;
+  };
 
   #  programs.neovim = {
   #enable = true;

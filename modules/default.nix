@@ -1,4 +1,5 @@
 {
-  home = import ./home;
-  system = import ./system;
+  home = [./home ./themes];
+
+  system = [./system ./themes];
 }

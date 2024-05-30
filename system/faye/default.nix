@@ -54,8 +54,8 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+    xkb.layout = "us";
+    xkb.variant = "";
   };
 
   services.xserver.videoDrivers = ["displaylink" "modesetting"];
@@ -82,13 +82,14 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ebradt = {
     isNormalUser = true;
     description = "Eve Bradt";
     extraGroups = ["networkmanager" "wheel"];
+    shell = pkgs.fish;
   };
 
   # Allow unfree packages
@@ -100,6 +101,7 @@
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
     home-manager
+    firefox
     #  wget
   ];
 
@@ -116,6 +118,9 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  programs.fish.enable = true;
+  programs.zsh.enable = true;
 
   # List services that you want to enable:
 

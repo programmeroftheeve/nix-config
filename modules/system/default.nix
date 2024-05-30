@@ -1,3 +1,3 @@
 {
-  modules = [];
+  imports = [];
 }

@@ -1,3 +1,3 @@
 {
-  modules = [./git.nix];
+  imports = [./git.nix ./nixvim.nix];
 }
